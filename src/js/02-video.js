@@ -11,10 +11,12 @@ player.on('play', function () {
 player.getVideoTitle().then(function (title) {
   console.log('title:', title);
 });
-player.on('timeupdate', function ({ duration, percent, seconds }) {
+
+const saveTimeToLocal = ({ seconds }) => {
   localStorage.setItem('videoplayer-current-time', seconds);
-  //   console.log(seconds);
-});
+};
+player.on('timeupdate', throttle(saveTimeToLocal, 1000));
+
 const locallySavedTime = localStorage.getItem('videoplayer-current-time');
 const parsedTime = Number(JSON.parse(locallySavedTime));
 
