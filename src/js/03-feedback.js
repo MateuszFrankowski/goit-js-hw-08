@@ -3,13 +3,13 @@ import throttle from 'lodash.throttle';
 
 const handleInput = event => {
   const data = {};
-  //nie działa przy:  trailing: true
+  //nie działa przy:  trailing: true i pisaniu znaków szybciej jak co 500ms
   const {
     elements: { email, message },
   } = event.currentTarget;
   data.email = email.value;
   data.message = message.value;
-
+  // działa
   // data.email = form.elements.email.value;
   // data.message = form.elements.message.value;
 
@@ -20,8 +20,8 @@ const handleInput = event => {
 
 form.addEventListener(
   'input',
-  throttle(handleInput, 1000, {
-    trailing: false,
+  throttle(handleInput, 500, {
+    trailing: true,
   })
 );
 const formState = localStorage.getItem('feedback-form-state');
