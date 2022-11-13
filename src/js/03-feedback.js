@@ -2,20 +2,28 @@ const form = document.querySelector('form');
 import throttle from 'lodash.throttle';
 
 const handleInput = event => {
-  console.log('email', event.currentTarget.elements.email.value);
-  console.log('message', event.currentTarget.elements.message.value);
   const data = {};
+  //nie działa przy:  trailing: true
   const {
     elements: { email, message },
   } = event.currentTarget;
   data.email = email.value;
   data.message = message.value;
+
+  // data.email = form.elements.email.value;
+  // data.message = form.elements.message.value;
+
   if (data.message !== '' || data.email !== '') {
     localStorage.setItem('feedback-form-state', JSON.stringify(data));
   }
 };
-const inputThrottleUpdate = throttle(handleInput, 500);
-form.addEventListener('input', inputThrottleUpdate);
+
+form.addEventListener(
+  'input',
+  throttle(handleInput, 1000, {
+    trailing: false,
+  })
+);
 const formState = localStorage.getItem('feedback-form-state');
 const parsedFormState = JSON.parse(formState);
 if (parsedFormState) {
@@ -25,14 +33,15 @@ if (parsedFormState) {
 }
 
 const handleSubmit = event => {
+  event.preventDefault();
   const data = {};
   const {
     elements: { email, message },
   } = event.currentTarget;
   data.email = email.value;
   data.message = message.value;
+  console.log(`Email: ${data.email}, Message: ${data.message}`);
   event.currentTarget.reset();
-  localStorage.clear();
-  console.log(`Email: ${data.email}, Message: ${data.email}`);
+  localStorage.clear(); // localStorage.removeItem('feedback-form-state');
 };
 form.addEventListener('submit', handleSubmit);
