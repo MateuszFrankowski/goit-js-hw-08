@@ -12,7 +12,11 @@ player.getVideoTitle().then(function (title) {
   console.log('title:', title);
 });
 
-const saveTimeToLocal = ({ seconds }) => {
+const saveTimeToLocal = ({ seconds, duration }) => {
+  console.log(seconds, duration);
+  if (seconds === duration) {
+    return localStorage.setItem('videoplayer-current-time', 0);
+  }
   localStorage.setItem('videoplayer-current-time', seconds);
 };
 player.on('timeupdate', throttle(saveTimeToLocal, 1000));
